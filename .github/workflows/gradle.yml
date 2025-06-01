@@ -20,6 +20,9 @@ jobs:
       # Сделать gradlew исполняемым
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
+      - name: Check formatting with ktlint
+
+        run: ./gradlew ktlintCheck
 
       - name: Build & Test
         run: ./gradlew build --stacktrace --console=plain

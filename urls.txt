@@ -1,0 +1,9 @@
+# valid URLs
+https://kotlinlang.org
+https://httpbin.org/status/204
+
+# client error
+https://example.com/404
+
+# non-existent domain
+https://no-such-domain-xyz987.com

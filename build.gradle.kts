@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.10"
     application
 }
 
-group = "org.example"
+group = "com.example.urlchecker"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -18,15 +18,17 @@ dependencies {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("com.example.urlchecker.MainKt")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }
+tasks.test {
+    useJUnitPlatform()
+}
+

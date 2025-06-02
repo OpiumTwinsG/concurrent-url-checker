@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    // id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     application
 }
 
@@ -22,22 +22,22 @@ application {
     mainClass.set("com.example.urlchecker.MainKt")
 }
 
-ktlint {
-    version.set("0.50.0")
-    verbose.set(true)
-    android.set(false)
-    outputToConsole.set(true)
-    ignoreFailures.set(false)
-
-    filter {
-        exclude("**/src/test/**")
-    }
-
-    reporters {
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
-    }
-}
+// ktlint {
+//    version.set("0.50.0")
+//    verbose.set(true)
+//    android.set(false)
+//    outputToConsole.set(true)
+//    ignoreFailures.set(false)
+//
+//    filter {
+//        exclude("**/src/test/**")
+//    }
+//
+//    reporters {
+//        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+//        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+//    }
+// }
 
 kotlin {
     jvmToolchain(17)
@@ -50,9 +50,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.named("ktlintTestSourceSetCheck").configure {
-    enabled = false
-}
-tasks.named("ktlintTestSourceSetFormat").configure {
-    enabled = false
-}
+tasks.findByName("ktlintTestSourceSetCheck")?.apply { enabled = false }
+tasks.findByName("ktlintTestSourceSetFormat")?.apply { enabled = false }
+apply(from = "./ktlint.gradle")

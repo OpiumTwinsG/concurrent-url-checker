@@ -1,0 +1,5 @@
+URL,Status,ResponseTimeMs,Error
+https://kotlinlang.org,OK,1530,
+https://httpbin.org/status/204,OK,1088,
+https://example.com/404,ERROR_404,1530,
+https://no-such-domain-xyz987.com,FAILED,,

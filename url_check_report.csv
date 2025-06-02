@@ -1,5 +1,2 @@
 URL,Status,ResponseTimeMs,Error
-https://kotlinlang.org,OK,1193,
-https://httpbin.org/status/204,OK,1193,
-https://example.com/404,ERROR_404,1946,
-https://no-such-domain-xyz987.com,FAILED,,
+https://good.com,OK,22,

@@ -3,25 +3,28 @@ package com.example.urlchecker
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Потокобезопасный progress-bar. Выводит строку вида
- * [██████░░░░░░░░░░░░░░░░░] 40 %
+ * Потокобезопасный progress-bar: [##########..........] 33 %
  */
-object ProgressBar {
+class ProgressBar(
+    private val total: Int,
+    private val barWidth: Int = 30,
+) {
+    private val done = AtomicInteger(0)
     private var last = -1
-    private val printed = AtomicInteger(0)
+
+    fun tick(value: Int = done.incrementAndGet()) = update(value, total)
 
     fun update(
-        done: Int,
+        doneNow: Int,
         total: Int,
     ) {
-        val percent = done * 100 / total
+        val percent = doneNow * 100 / total
         if (percent != last) {
             last = percent
-            val barLen = 30
-            val filled = percent * barLen / 100
-            val bar = "#".repeat(filled) + ".".repeat(barLen - filled)
+            val filled = percent * barWidth / 100
+            val bar = "#".repeat(filled) + ".".repeat(barWidth - filled)
             print("\r[$bar] $percent%")
-            if (done == total) println()
+            if (doneNow == total) println()
         }
     }
 }

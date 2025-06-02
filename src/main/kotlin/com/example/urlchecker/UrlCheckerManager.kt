@@ -12,6 +12,7 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.system.measureTimeMillis
 
 class UrlCheckerManager(
@@ -19,6 +20,7 @@ class UrlCheckerManager(
     private val maxConcurrent: Int,
     private val retryCount: Int = 1,
     private val timeoutMillis: Long = 5_000L,
+    private val showProgress: Boolean = true,
 ) {
     private val client =
         HttpClient(CIO) {
@@ -29,10 +31,15 @@ class UrlCheckerManager(
         coroutineScope {
             val sem = Semaphore(maxConcurrent)
             val tasks = urls.map { UrlCheckTask(it) }
+            val done = AtomicInteger(0)
 
             tasks
                 .map { task ->
-                    launch(Dispatchers.IO) { sem.withPermit { checkSingleUrl(task) } }
+                    launch(Dispatchers.IO) {
+                        sem.withPermit { checkSingleUrl(task) }
+                        val finished = done.incrementAndGet()
+                        if (showProgress) ProgressBar.update(finished, urls.size)
+                    }
                 }.joinAll()
 
             client.close()
@@ -40,6 +47,7 @@ class UrlCheckerManager(
         }
 
     private suspend fun checkSingleUrl(task: UrlCheckTask) {
+        var backoff = 1_000L
         repeat(retryCount) { attempt ->
             try {
                 val elapsed =
@@ -52,7 +60,8 @@ class UrlCheckerManager(
             } catch (e: Exception) {
                 task.errorMessage = e.message
                 if (attempt == retryCount - 1) logError(task)
-                delay(500)
+                delay(backoff)
+                backoff *= 2
             }
         }
     }
